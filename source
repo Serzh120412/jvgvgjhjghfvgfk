@@ -4851,6 +4851,7 @@ CMDs[#CMDs + 1] = {NAME = 'unctrllock', DESC = 'Re-binds Shiftlock to LeftShift'
 CMDs[#CMDs + 1] = {NAME = 'listento [player]', DESC = 'Listens to the area around a player. Can also eavesdrop with vc'}
 CMDs[#CMDs + 1] = {NAME = 'unlistento', DESC = 'Disables listento'}
 CMDs[#CMDs + 1] = {NAME = 'jerk [speed] [distance]', DESC = 'Makes you jork it'}
+CMDs[#CMDs + 1] = {NAME = 'ziga [height]', DESC = '😂😂😂'}
 CMDs[#CMDs + 1] = {NAME = 'unsuspendchat', DESC = 'Unsuspends you from text chat'}
 CMDs[#CMDs + 1] = {NAME = 'unsuspendvc', DESC = 'Unsuspends you from voice chat'}
 CMDs[#CMDs + 1] = {NAME = 'muteallvcs', DESC = 'Mutes voice chat for all players'}
@@ -12580,6 +12581,62 @@ addcmd("jerk", {}, function(args, speaker)
 		end
 	end
 end)
+
+
+
+addcmd("ziga", {}, function(args, speaker)
+
+
+	local height = (tonumber(args[1]) or 0) > 0 and tonumber(args[1]) or 1
+
+	local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
+	local backpack = speaker:FindFirstChildWhichIsA("Backpack")
+	if not humanoid or not backpack then return end
+
+	local tool = Instance.new("Tool")
+	tool.Name = "Ziga"
+	tool.ToolTip = "😂😂😂"
+	tool.RequiresHandle = false
+	tool.Parent = backpack
+
+	local ziging = false
+	local track = nil
+
+	local function stopTomfoolery()
+		ziging = false
+		if track then
+			track:Stop()
+			track = nil
+		end
+	end
+
+	tool.Equipped:Connect(function() ziging = true end)
+	tool.Unequipped:Connect(stopTomfoolery)
+	humanoid.Died:Connect(stopTomfoolery)
+
+	while task.wait() do
+		if not ziging then continue end
+
+		local isR15 = r15(speaker)
+		if not track then
+			local anim = Instance.new("Animation")
+			anim.AnimationId = not isR15 and "rbxassetid://72042024" or "rbxassetid://698251653"
+			track = humanoid:LoadAnimation(anim)
+		end
+
+		track:Play()
+		track:AdjustSpeed(isR15 and 0 or 0)
+		track.TimePosition = (isR15 and (0.4 / height) or 0.1 / height)
+		task.wait(0.1)
+		while track do task.wait(0.1) end
+		if track then
+			track:Stop()
+			track = nil
+		end
+	end
+end)
+
+
 
 addcmd("guiscale", {}, function(args, speaker)
     if args[1] and isNumber(args[1]) then
